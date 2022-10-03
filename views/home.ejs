@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Keep Clone</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
+    <script src="https://kit.fontawesome.com/1799259c11.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="icon" sizes="128x128" href="/images/icon_2020q4v2_128.png">
+</head>
+<body>
+    <nav id="header">
+        <h1>
+            <img src="/images/content-writing.png" alt=""> Keep Notes Of...
+        </h1>
+    </nav>
+    <div id="full-container">
+        <div id="notes-input-container">
+            <form id="add-form" action="/add-note" method="POST" autocomplete="off">
+                <input name="note" type="text" id="note" placeholder="Take a note..." required>
+            </form>
+        </div>
+        <div id="pop-up-container">
+            <form id="update-form" method="POST" autocomplete="off">
+                <img src="/images/math.png" alt="">
+                <input name="title" type="text" id="updateTitle" placeholder="Title" required>
+                <input name="tag" type="text" id="updateTag" placeholder="Tag" required>
+                <input name="note" type="text" id="updateNote" placeholder="Take a note..." required>
+                <div id="update"><button id="update-btn">Update</button></div>
+            </form>
+        </div>
+        <% if(notes){ %> 
+            <div id="notes-container">
+                <% for(note of notes){ %>
+                    <div class="note" id="<%= note._id %>">
+                        <a href="/toggle-pinned/<%= note._id %>"><i <%if(note.pinned){%> style="color: red" <%}%>  class="pinned fa-solid fa-thumbtack"></i></a>
+                        <p class="note-title"><%= note.title %></p>
+                        <i id="<%= note._id %>" class="edit fa-solid fa-pen-to-square"></i>
+                        <p class="note-tag"><%= note.tag %></p>
+                        <p class="note-notes"><%= note.note %> </p>
+                        <a href="/delete-note/<%= note._id %>"><i class="fa-solid fa-trash"></i></a>
+                    </div>    
+                <% } %> 
+            </div>
+        <% } %> 
+        <div id="pagination-container">
+            <a id="prev-link" href="/<%if(prevPage){%><%=Number(currPage)-1%><%}%>" data-prev="<%= prevPage %>">
+                <button>prev</button>
+            </a>
+            <a id="next-link" href="/<%if(nextPage){%><%=Number(currPage)+1%><%}%>" data-next="<%= nextPage %>">
+                <button>next</button>
+            </a>
+        </div>
+    </div>
+
+    <script src="/js/home.js"></script>
+    <script>
+        <% if(flash.success && flash.success.length > 0){ %>
+            new Noty({
+                theme: 'relax',
+                text: "<%= flash.success %>",
+                type: 'success',
+                layout: 'topRight',
+                timeout: '1500'
+            }).show();
+        <% } %>
+
+        <% if(flash.error && flash.error.length > 0){ %>
+            new Noty({
+                theme: 'relax',
+                text: "<%= flash.error %>",
+                type: 'error',
+                layout: 'topRight',
+                timeout: '1500'
+            }).show();
+        <% } %>
+
+    </script>
+</body>
+</html>
